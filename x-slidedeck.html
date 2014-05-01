@@ -1,0 +1,64 @@
+<html>
+<body>
+<template id="deck">
+  <style>
+    ::content x-slide {
+      display: none;
+      position: absolute;
+      width:  100%;
+      height: 100%;
+    }
+
+    ::content x-slide.active {
+      display: block;
+    }
+
+    .deck {
+      width:  100%;
+      height: 100%;
+    }
+  </style>
+  <div>
+    <content></content>
+  </div>
+</template>
+
+<script>
+  var deckDoc = document.currentScript.ownerDocument;
+  var proto = Object.create(HTMLElement.prototype);
+
+  proto.createdCallback = function() {
+    this._root = this.createShadowRoot();
+
+    console.log(deckDoc);
+    var tplContent = deckDoc.querySelector("template#deck").content;
+    this._root.appendChild(tplContent.cloneNode(true));
+  };
+
+  proto.attachedCallback = function() {
+    var self = this;
+    self.querySelector("x-slide:nth-child(1)").classList.add("active");
+    document.addEventListener("keyup", function(event) {
+      var transitFunc = undefined;
+      var slideShown     = document.querySelector("x-slide.active"),
+          slideToBeShown = slideShown;
+
+      if(event.keyCode == 37) {         // left
+        transitFunc = function(node) { return node.previousSibling; }
+      } else if(event.keyCode == 39 ) { // right
+          transitFunc = function(node) { return node.nextSibling; }
+      } else { return; }
+
+      while((slideToBeShown = transitFunc(slideToBeShown)) && slideToBeShown.tagName !== "X-SLIDE");
+
+      if(!slideToBeShown) return;
+
+      slideToBeShown.classList.add("active");
+      slideShown.classList.remove("active");
+    });
+  };
+
+  var XSlideDeck = document.registerElement("x-slidedeck", { prototype: proto });
+</script>
+</body>
+</html>
