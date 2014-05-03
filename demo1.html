@@ -1,0 +1,22 @@
+    <div class="filterList">
+      <label for="filterTerm">Search for: </label>
+      <input id="filterTerm">
+      <ul>
+        <li>Chuck Norris doesn't call the wrong number. You answer the wrong phone.</li>
+        <li>Chuck Norris has been to Mars; that's why there are no signs of life.</li>
+        <li>Chuck Norris refers to himself in fourth person.?</li>
+        <li>Chuck Norris once leaned against a tower in Pisa, Italy.</li>
+        <li>To keep is his mind sharp Chuck Norris plays Tic-Tac-Toe versus himself. He wins every time.</li>
+        <li>Light is so fast, because it tries to escape Chuck Norris (but that obviously fails)</li>
+        <li>The average room bears 73658 ways for Chuck Norris to kill you, including just the room itself.</li>
+      </ul>
+    </div>
+    <script>
+      document.getElementById("filterTerm").addEventListener("keyup", function() {
+        var items = document.querySelectorAll(".filterList li");
+        for(var i=0; i<items.length;i++) {
+          items[i].style.display =
+            (items[i].textContent.match(this.value) ? "block" : "none");
+        }
+      });
+    </script>
