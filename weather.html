@@ -1,0 +1,70 @@
+<template>
+      <style>
+        article { text-align: center; }
+      </style>
+      <article>
+        <h1><img /></h1>
+        <h2><span class="current"></span>&deg;</h2>
+        <p><strong class="min"></strong>&deg; &mdash; <strong class="max"></strong>&deg;</p>
+      </article>
+    </template>
+
+    <script>
+
+      var XWeather = undefined;
+      var localDoc = document.currentScript.ownerDocument;
+
+      (function() {
+        var proto = Object.create(HTMLElement.prototype),
+            city  = "Barcelona",
+            units = "metric";
+
+        proto.createdCallback = function() {
+          var self = this;
+          this._root = this.createShadowRoot();
+          var tplContent = localDoc.querySelector("template").content;
+
+          this._root.appendChild(tplContent.cloneNode(true));
+          // This method is public
+          this.update = function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://api.openweathermap.org/data/2.5/weather?q=" + self.city + "&units=" + self.units, false);
+            xhr.onreadystatechange = function() {
+              if(this.readyState != 4) return; //We are not ready...
+
+              var response = JSON.parse(this.responseText);
+
+              //If the API responds with an error, we ignore it
+              if(response.message) { return; }
+
+              self._root.querySelector("img").src = "http://openweathermap.org/img/w/" + response.weather[0].icon + ".png";
+              self._root.querySelector(".current").textContent = response.main.temp;
+              self._root.querySelector(".min").textContent = response.main.temp_min;
+              self._root.querySelector(".max").textContent = response.main.temp_max;
+            }
+            xhr.send(null);
+          };
+        };
+
+        proto.attachedCallback = function() {
+          this.city  = this.attributes.getNamedItem("city") && this.attributes.getNamedItem("city").value || this.city;
+          this.units = this.attributes.getNamedItem("units") && this.attributes.getNamedItem("units").value || this.units;
+          this.update();
+        };
+
+        // Let's define the "city" property. Whenever it changes, we save that value and call update()
+        Object.defineProperty(proto, "city", {get: function() { return city; }, set: function(newVal) {
+          city = newVal;
+          this.update();
+        }});
+
+        Object.defineProperty(proto, "units", {get: function() { return units; }, set: function(newVal) {
+          units = newVal;
+          this.update();
+        }});
+
+        XWeather = document.registerElement("x-weather", { prototype: proto });
+      }());
+    </script>
+
+    <x-weather city="Barcelona"></x-weather>
