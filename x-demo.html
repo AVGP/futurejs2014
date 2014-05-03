@@ -41,13 +41,13 @@
       self.preview = (previewElem.contentWindow) ? previewElem.contentWindow :
                        (previewElem.contentDocument.document) ? previewElem.contentDocument.document : previewElem.contentDocument;
 
+      self.source.addEventListener("keyup", function(e) { e.stopPropagation(); return false });
 
       this.load = function() {
         if(!self.src) throw new Error("Can't load without a source");
 
         var xhr = new XMLHttpRequest();
         xhr.onload = function() {
-          console.log(this);
           self.source.value = this.responseText;
           updatePreview(self.preview, self.source.value);
         }
