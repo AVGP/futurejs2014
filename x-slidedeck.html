@@ -18,14 +18,13 @@
 
     @media print {
       ::content x-slide {
-        display: inline-block;
+        display: block;
         position: relative;
-        width: 21cm;
-        min-height: 29.7cm;
+        max-width: 29.7cm;
+        height: 15cm;
         padding: 2cm;
         margin: 1cm auto;
         page-break-after: always;
-        page-break-inside: avoid;
         overflow: hidden;
       }
     }
