@@ -1,0 +1,16 @@
+<template>
+  <script>
+    alert("Hi!");
+  </script>
+  <h1></h1>
+</template>
+
+<button id="add">Make a headline</button>
+
+<script>
+  document.getElementById("add").addEventListener("click", function() {
+    var tplContent = document.querySelector("template").content;
+    tplContent.querySelector("h1").textContent = window.prompt("Headline");
+    document.body.appendChild(tplContent.cloneNode(true));
+  });
+</script>
