@@ -59,7 +59,7 @@
     proto.attachedCallback = function() {
       var self = this;
 
-      self.source.addEventListener("keyup", function() {
+      self.source.addEventListener("blur", function() {
         updatePreview(self.preview, this.value);
       });
 
