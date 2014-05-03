@@ -1,0 +1,36 @@
+<template>
+  <p>
+    <label for="filter">Filter by</label>
+    <input id="filter">
+  </p>
+  <ul id="list">
+    <content select="li"></content>
+  </ul>
+
+</template>
+<script>
+  var FilterList = undefined;
+  (function() {
+    var proto = Object.create(HTMLElement.prototype);
+
+    proto.createdCallback = function() {
+      this._root = this.createShadowRoot();
+      var tplContent = document.currentScript.ownerDocument.querySelector("template").content;
+
+      this._root.appendChild(tplContent.cloneNode(true));
+    };
+
+    proto.attachedCallback = function() {
+      var self = this;
+      var filterElem = this._root.querySelector("#filter");
+      filterElem.addEventListener("keyup", function() {
+        var items = self.querySelectorAll("li");
+        for(var i=0; i<items.length;i++) {
+          items[i].style.display = (items[i].textContent.match(this.value) ? "block" : "none");
+        }
+      });
+    };
+
+    FilterList = document.registerElement("filter-list", { prototype: proto });
+  }());
+</script>
