@@ -1,8 +1,10 @@
 <template id="slide">
   <style>
     .slide {
-      background-color: steelblue;
-      color:            white;
+      background-color: white;
+      color:            black;
+
+      font-family: Helvetica, Arial, sans-serif;
 
       width:  100%;
       height: 100%;
@@ -14,20 +16,23 @@
 </template>
 
 <script>
-  var slideDoc = document.currentScript.ownerDocument;
-  console.log(slideDoc);
-  var protoSlide = Object.create(HTMLElement.prototype);
+  var XSlide = undefined;
+  (function() {
+    var localDoc = document.currentScript.ownerDocument;
+    console.log(localDoc);
+    var proto = Object.create(HTMLElement.prototype);
 
-  protoSlide.createdCallback = function() {
-    this._root = this.createShadowRoot();
+    proto.createdCallback = function() {
+      this._root = this.createShadowRoot();
 
-    var tplContent = slideDoc.querySelector("template#slide").content;
-    this._root.appendChild(tplContent.cloneNode(true));
-  };
+      var tplContent = localDoc.querySelector("template#slide").content;
+      this._root.appendChild(tplContent.cloneNode(true));
+    };
 
-  protoSlide.attachedCallback = function() {
-    var self = this;
-  };
+    proto.attachedCallback = function() {
+      var self = this;
+    };
 
-  var XSlide = document.registerElement("x-slide", { prototype: protoSlide });
+    XSlide = document.registerElement("x-slide", { prototype: proto });
+  })();
 </script>
