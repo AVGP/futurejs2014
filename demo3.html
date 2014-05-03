@@ -1,0 +1,26 @@
+<template>
+  <script>
+    console.log("Hi!");
+  </script>
+  <h1></h1>
+</template>
+
+<button id="add">Make a headline</button>
+<button id="test">Test for headlines</button>
+
+<script>
+  document.getElementById("add").addEventListener("click", function() {
+    var tplContent = document.querySelector("template").content.cloneNode(true);
+    tplContent.querySelector("h1").textContent = window.prompt("Headline");
+
+    var container = document.createElement("div");
+    var root      = container.createShadowRoot();
+    root.appendChild(tplContent);
+
+    document.body.appendChild(container);
+  });
+
+  document.getElementById("test").addEventListener("click", function() {
+    alert("Found " + document.querySelectorAll("h1").length + " headlines.");
+  });
+</script>
